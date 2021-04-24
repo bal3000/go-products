@@ -6,6 +6,13 @@ import (
 )
 
 func CalculatePackSizes(packs []int, target int) map[int]int {
+	// first if the exact size exists send that
+	if findPack(packs, target) {
+		return map[int]int{
+			target: 1,
+		}
+	}
+
 	packsToSend := make(map[int]int)
 
 	// sort desc
@@ -14,15 +21,9 @@ func CalculatePackSizes(packs []int, target int) map[int]int {
 	})
 
 outer:
-	for {
+	for getCurrentTotal(packsToSend) < target {
 		for i, p := range packs {
 			ct := getCurrentTotal(packsToSend)
-			log.Printf("current pack: %v", p)
-			log.Printf("current total: %v", ct)
-
-			if ct >= target {
-				break outer
-			}
 
 			if p+ct <= target {
 				packsToSend[p] += 1
@@ -32,8 +33,25 @@ outer:
 			// lowest number in slice
 			if i+1 == len(packs) {
 				packsToSend[p] += 1
-				continue outer
 			}
+		}
+	}
+
+	for {
+		updated := false
+		for k, v := range packsToSend {
+			total := v * k
+			log.Printf("current total: %v", total)
+			if v > 1 && findPack(packs, total) {
+				log.Println("found better pack")
+				delete(packsToSend, k)
+				packsToSend[total] += 1
+				updated = true
+			}
+		}
+
+		if !updated {
+			break
 		}
 	}
 
@@ -46,4 +64,13 @@ func getCurrentTotal(packs map[int]int) int {
 		ct += k * v
 	}
 	return ct
+}
+
+func findPack(packs []int, size int) bool {
+	for _, item := range packs {
+		if item == size {
+			return true
+		}
+	}
+	return false
 }
