@@ -8,6 +8,7 @@ import (
 
 	"github.com/bal3000/go-products/infrastructure"
 	"github.com/bal3000/go-products/models"
+	"github.com/bal3000/go-products/packs"
 	"github.com/gorilla/mux"
 )
 
@@ -69,50 +70,11 @@ func (ph ProductHandler) CalculatePacksToSend(w http.ResponseWriter, r *http.Req
 		http.Error(w, fmt.Sprintf("product %s not found", request.ProductID), http.StatusNotFound)
 	}
 
-	packsToSend := make(map[int]int)
-
-outer:
-	for {
-		for i, p := range sizes {
-			log.Printf("current pack: %v", p)
-
-			log.Printf("p >= request.ItemsOrder: %v", p >= request.ItemsOrder)
-			if p >= request.ItemsOrder {
-				packsToSend[p] += 1
-				break outer
-			}
-
-			ct := getCurrentTotal(packsToSend)
-
-			log.Printf("ct+p >= request.ItemsOrder: %v", ct+p >= request.ItemsOrder)
-			if ct+p >= request.ItemsOrder {
-				packsToSend[p] += 1
-				break outer
-			}
-
-			log.Printf("i+1 == len(sizes): %v", i+1 == len(sizes))
-			log.Printf("i+1: %v", i+1)
-			log.Printf("len(sizes): %v", len(sizes))
-			if i+1 == len(sizes) {
-				packsToSend[p] += 1
-			}
-		}
-	}
+	packsToSend := packs.CalculatePackSizes(sizes, request.ItemsOrder)
 
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(packsToSend); err != nil {
 		log.Printf("failed to send total back to client, %v", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
-}
-
-func getCurrentTotal(packs map[int]int) int {
-	ct := 0
-	for k, v := range packs {
-		ct += k * v
-	}
-
-	log.Printf("total: %v", ct)
-
-	return ct
 }
