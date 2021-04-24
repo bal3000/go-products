@@ -37,6 +37,7 @@ outer:
 		}
 	}
 
+	// loop through and see if some of the multi packs can't be reassigned to single packs
 	for {
 		updated := false
 		for k, v := range packsToSend {
