@@ -1,10 +1,10 @@
 package infrastructure
 
 import (
+	"embed"
 	"encoding/json"
 	"errors"
 	"log"
-	"os"
 
 	"github.com/bal3000/go-products/models"
 )
@@ -13,9 +13,9 @@ type JsonDataStore struct {
 	products map[string][]int
 }
 
-func NewJsonDatatore(filePath string) (*JsonDataStore, error) {
+func NewJsonDatatore(fs embed.FS) (*JsonDataStore, error) {
 	log.Println("loading json file")
-	file, err := os.Open(filePath)
+	file, err := fs.Open("packsizes.json")
 	if err != nil {
 		return nil, err
 	}

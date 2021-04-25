@@ -27,6 +27,7 @@ func (s Server) Run() error {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/products/{productId}", handler.GetPackSizes).Methods(http.MethodGet)
 	r.HandleFunc("/api/products", handler.CalculatePacksToSend).Methods(http.MethodPost)
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("public/")))
 
 	srv := &http.Server{
 		Addr:         "0.0.0.0:8080",

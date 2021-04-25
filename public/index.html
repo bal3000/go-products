@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>WebSocket</title>
+</head>
+
+<body>
+    <input id="items" type="text" />
+    <button onclick="getPacks()">Get Packs</button>
+
+    <div id="response"></div>
+
+  <script>  
+    async function getPacks() {
+        const items = document.querySelector('#items').value;
+        const response = await fetch('/api/products', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "productId": "123",
+                "itemsOrder": parseInt(items)
+            })
+        });
+
+        const data = await response.json();
+
+        document.querySelector('#response').innerHTML = JSON.stringify(data);
+    }   
+
+  </script>
+</body>
+
+</html>
