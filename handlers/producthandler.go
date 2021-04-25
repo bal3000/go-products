@@ -28,15 +28,18 @@ func (ph ProductHandler) GetPackSizes(w http.ResponseWriter, r *http.Request) {
 
 	if !ok {
 		http.Error(w, "please provide a product id", http.StatusBadRequest)
+		return
 	}
 
 	sizes, ok, err := ph.dataStore.PackSizesForProduct(productId)
 	if err != nil {
 		log.Printf("error occured getting product from datastore, %v", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 	if !ok {
 		http.Error(w, fmt.Sprintf("product %s not found", productId), http.StatusNotFound)
+		return
 	}
 
 	packSizes := struct {
@@ -59,15 +62,22 @@ func (ph ProductHandler) CalculatePacksToSend(w http.ResponseWriter, r *http.Req
 	err := json.NewDecoder(r.Body).Decode(request)
 	if err != nil {
 		http.Error(w, "there was a problem with your request, please check your request body", http.StatusBadRequest)
+		return
+	}
+	if request.ItemsOrder == 0 {
+		http.Error(w, "please provide a valid number of items", http.StatusBadRequest)
+		return
 	}
 
 	sizes, ok, err := ph.dataStore.PackSizesForProduct(request.ProductID)
 	if err != nil {
 		log.Printf("error occured getting product from datastore, %v", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 	if !ok {
 		http.Error(w, fmt.Sprintf("product %s not found", request.ProductID), http.StatusNotFound)
+		return
 	}
 
 	packsToSend := packs.CalculatePackSizes(sizes, request.ItemsOrder)

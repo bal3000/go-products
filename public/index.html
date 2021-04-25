@@ -7,10 +7,13 @@
 </head>
 
 <body>
-    <input id="items" type="text" />
-    <button onclick="getPacks()">Get Packs</button>
-
-    <div id="response"></div>
+    <div style="display: block;">
+        <input id="items" type="text" />
+        <button onclick="getPacks()">Get Packs</button>
+    </div>
+    
+    <h3>Packs</h3>
+    <textarea style="width: 300px; height: 200px; clear: both; margin: 10px 0;" id="response"></textarea>
 
   <script>  
     async function getPacks() {
@@ -28,7 +31,7 @@
 
         const data = await response.json();
 
-        document.querySelector('#response').innerHTML = JSON.stringify(data);
+        document.querySelector('#response').value = JSON.stringify(data, null, 2);
     }   
 
   </script>
