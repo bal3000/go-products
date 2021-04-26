@@ -5,6 +5,6 @@ type ProductCollection struct {
 }
 
 type Product struct {
-	ProductID string `json:"productId"`
-	PackSizes []int  `json:"packsizes"`
+	ProductID string `json:"productId" bson:"productId,omitempty"`
+	PackSizes []int  `json:"packsizes" bson:"packsizes,omitempty"`
 }

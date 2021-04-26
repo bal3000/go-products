@@ -1,21 +1,28 @@
 package main
 
 import (
-	"embed"
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/bal3000/go-products/app"
 	"github.com/bal3000/go-products/infrastructure"
 )
 
-//go:embed packsizes.json
-var packsizes embed.FS
-
 func main() {
-	ds, err := infrastructure.NewJsonDatatore(packsizes)
+	// ds, err := infrastructure.NewJsonDatatore(packsizes)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+
+	username := os.Getenv("MONGO_USERNAME")
+	password := os.Getenv("MONGO_PASSWORD")
+
+	ds, closer, err := infrastructure.NewDBDataStore(fmt.Sprintf("mongodb+srv://%s:%s@baltest.4maj7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", username, password))
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer closer()
 
 	srv := app.NewServer(ds)
 
