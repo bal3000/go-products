@@ -71,7 +71,7 @@ func TestCalculatePacksToSend(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(tc.input))
 		rec := httptest.NewRecorder()
 
-		ph := ProductHandler{dataStore: mockDataStore{}}
+		ph := Product{dataStore: mockDataStore{}}
 		ph.CalculatePacksToSend(rec, req)
 
 		actualRes := mockResponse{}

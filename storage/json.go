@@ -1,4 +1,4 @@
-package infrastructure
+package storage
 
 import (
 	"embed"
@@ -9,11 +9,11 @@ import (
 	"github.com/bal3000/go-products/models"
 )
 
-type JsonDataStore struct {
+type JSON struct {
 	products map[string][]int
 }
 
-func NewJsonDatatore(fs embed.FS) (*JsonDataStore, error) {
+func NewJSON(fs embed.FS) (*JSON, error) {
 	log.Println("loading json file")
 	file, err := fs.Open("packsizes.json")
 	if err != nil {
@@ -33,10 +33,10 @@ func NewJsonDatatore(fs embed.FS) (*JsonDataStore, error) {
 		pm[p.ProductID] = p.PackSizes
 	}
 
-	return &JsonDataStore{products: pm}, nil
+	return &JSON{products: pm}, nil
 }
 
-func (ds *JsonDataStore) PackSizesForProduct(productId string) ([]int, bool, error) {
+func (ds *JSON) PackSizesForProduct(productId string) ([]int, bool, error) {
 	if ds == nil {
 		return nil, false, errors.New("the data store has not been initialized")
 	}

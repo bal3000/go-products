@@ -22,7 +22,7 @@ func NewServer(ds infrastructure.DataStore) Server {
 }
 
 func (s Server) Run() error {
-	handler := handlers.NewProductHandler(s.dataStore)
+	handler := handlers.NewProduct(s.dataStore)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/api/products/{productId}", handler.GetPackSizes).Methods(http.MethodGet)

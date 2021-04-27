@@ -1,4 +1,4 @@
-package infrastructure
+package storage
 
 import (
 	"context"
@@ -12,11 +12,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type DBDataStore struct {
+type Mongo struct {
 	dbClient *mongo.Client
 }
 
-func NewDBDataStore(connString string) (*DBDataStore, func(), error) {
+func NewMongo(connString string) (*Mongo, func(), error) {
 	client, err := mongo.NewClient(options.Client().ApplyURI(connString))
 	if err != nil {
 		return nil, nil, err
@@ -29,13 +29,13 @@ func NewDBDataStore(connString string) (*DBDataStore, func(), error) {
 		return nil, nil, err
 	}
 
-	return &DBDataStore{dbClient: client}, func() {
+	return &Mongo{dbClient: client}, func() {
 		log.Println("closing mongo db connection")
 		client.Disconnect(ctx)
 	}, nil
 }
 
-func (ds *DBDataStore) PackSizesForProduct(productId string) ([]int, bool, error) {
+func (ds *Mongo) PackSizesForProduct(productId string) ([]int, bool, error) {
 	if ds == nil {
 		return nil, false, errors.New("the data store has not been initialized")
 	}

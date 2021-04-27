@@ -6,21 +6,21 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/bal3000/go-products/infrastructure"
 	"github.com/bal3000/go-products/models"
-	"github.com/bal3000/go-products/packs"
+	"github.com/bal3000/go-products/productpacks"
+	"github.com/bal3000/go-products/storage"
 	"github.com/gorilla/mux"
 )
 
-type ProductHandler struct {
-	dataStore infrastructure.DataStore
+type Product struct {
+	dataStore storage.DataStore
 }
 
-func NewProductHandler(ds infrastructure.DataStore) ProductHandler {
-	return ProductHandler{dataStore: ds}
+func NewProduct(ds storage.DataStore) Product {
+	return Product{dataStore: ds}
 }
 
-func (ph ProductHandler) GetPackSizes(w http.ResponseWriter, r *http.Request) {
+func (ph Product) GetPackSizes(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
 	vars := mux.Vars(r)
@@ -55,7 +55,7 @@ func (ph ProductHandler) GetPackSizes(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (ph ProductHandler) CalculatePacksToSend(w http.ResponseWriter, r *http.Request) {
+func (ph Product) CalculatePacksToSend(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
 	request := &models.PackRequest{}
@@ -80,7 +80,7 @@ func (ph ProductHandler) CalculatePacksToSend(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	packsToSend := packs.CalculatePackSizes(sizes, request.ItemsOrder)
+	packsToSend := productpacks.CalculateSizes(sizes, request.ItemsOrder)
 
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(packsToSend); err != nil {

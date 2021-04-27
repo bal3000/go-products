@@ -6,11 +6,11 @@ import (
 	"os"
 
 	"github.com/bal3000/go-products/app"
-	"github.com/bal3000/go-products/infrastructure"
+	"github.com/bal3000/go-products/storage"
 )
 
 func main() {
-	// ds, err := infrastructure.NewJsonDatatore(packsizes)
+	// ds, err := storage.NewJSON(packsizes)
 	// if err != nil {
 	// 	log.Fatalln(err)
 	// }
@@ -18,7 +18,7 @@ func main() {
 	username := os.Getenv("MONGO_USERNAME")
 	password := os.Getenv("MONGO_PASSWORD")
 
-	ds, closer, err := infrastructure.NewDBDataStore(fmt.Sprintf("mongodb+srv://%s:%s@baltest.4maj7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", username, password))
+	ds, closer, err := storage.NewMongo(fmt.Sprintf("mongodb+srv://%s:%s@baltest.4maj7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", username, password))
 	if err != nil {
 		log.Fatalln(err)
 	}

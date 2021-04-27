@@ -1,11 +1,11 @@
-package packs
+package productpacks
 
 import (
 	"log"
 	"sort"
 )
 
-func CalculatePackSizes(packs []int, target int) map[int]int {
+func CalculateSizes(packs []int, target int) map[int]int {
 	// first if the exact size exists send that
 	if findPack(packs, target) {
 		return map[int]int{
