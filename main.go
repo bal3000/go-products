@@ -1,18 +1,14 @@
 package main
 
 import (
-	"embed"
 	"log"
 
 	"github.com/bal3000/go-products/app"
 	"github.com/bal3000/go-products/storage"
 )
 
-//go:embed packsizes.json
-var packsizes embed.FS
-
 func main() {
-	ds, err := storage.NewJSON(packsizes)
+	ds, err := storage.NewJSON("./packsizes.json")
 	if err != nil {
 		log.Fatalln(err)
 	}

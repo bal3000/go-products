@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"embed"
+	"os"
 	"encoding/json"
 	"errors"
 	"log"
@@ -13,9 +13,9 @@ type JSON struct {
 	products map[string][]int
 }
 
-func NewJSON(fs embed.FS) (*JSON, error) {
+func NewJSON(fs string) (*JSON, error) {
 	log.Println("loading json file")
-	file, err := fs.Open("packsizes.json")
+	file, err := os.Open(fs)
 	if err != nil {
 		return nil, err
 	}
