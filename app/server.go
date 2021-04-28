@@ -9,15 +9,15 @@ import (
 	"time"
 
 	"github.com/bal3000/go-products/handlers"
-	"github.com/bal3000/go-products/infrastructure"
+	"github.com/bal3000/go-products/storage"
 	"github.com/gorilla/mux"
 )
 
 type Server struct {
-	dataStore infrastructure.DataStore
+	dataStore storage.DataStore
 }
 
-func NewServer(ds infrastructure.DataStore) Server {
+func NewServer(ds storage.DataStore) Server {
 	return Server{dataStore: ds}
 }
 
